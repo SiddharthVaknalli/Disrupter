@@ -1,0 +1,18 @@
+<% include partials/header %>
+
+<div class="ui main text container">
+    <h1>Sign Up!</h1>
+    <form class="ui form" action="/register" method="POST">
+        <div class="field">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Username">
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Password">
+        </div>
+        <button class="ui button" type="submit">Sign Up</button>
+    </form>
+</div>
+
+<% include partials/footer %>

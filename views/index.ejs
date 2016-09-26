@@ -1,6 +1,7 @@
 <% include partials/header %>
 <div class="ui main text container">
-    <div class="ui huge header">BLOG APP</div>
+    <div class="ui huge header centered">DISRUPTER</div>
+    <p class="ui center aligned">Blog about disruptive tech ideas, or simply about stuff you love!</p>
     <div class="ui top attached segment">
         <div class="ui divided items">
             <%blogs.forEach(function(blog){ %>
@@ -10,16 +11,20 @@
                     </div>
                     <div class="content">
                         <a class="header" href="/blogs/<%= blog._id %>"><%= blog.title %></a>
+                        <br/>
+                        By <a><%= blog.author.username %></a>
                         <div class="meta">
-                            <span><%= blog.created.toDateString() %></span>  
+                            <span><%= blog.created.toDateString() %> <%= blog.created.toLocaleTimeString([], {timeZone: 'America/Toronto', hour: '2-digit', minute:'2-digit'}) %> EST</span>  
                         </div>
-                        <div class="description">
-                            <p><%- blog.body.substring(0, 100) %>...</p>  
-                        </div>
+                        <% if(blog.body) { %>
+                            <div class="description">
+                                <p><%- blog.body.substring(0, 100) %>...</p>  
+                            </div>
+                        <% } %>
                         <div class="extra">
                             <a class="ui floated basic violet button" href="/blogs/<%= blog._id %>">
                                 Read More
-                                <i class="right chevron icon"></i>
+                                <i class="chevron right icon"></i>
                             </a>
                         </div>
                     </div>

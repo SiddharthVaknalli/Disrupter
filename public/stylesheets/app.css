@@ -9,3 +9,22 @@ i.icon{
 #delete{
     display: inline;
 }
+
+#message {
+    padding-top: 70px;
+    padding-bottom: -120px;
+}
+
+.footer {
+    margin-top: 100px;
+}
+
+.margined {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.text {
+    margin-top: -50px;
+    margin-bottom: 2.0em;
+}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Blog App</title>
+        <title>Disrupter</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.1/semantic.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/app.css">
     </head>
@@ -10,9 +10,35 @@
             <div class="ui container">
                 <div class="header item">
                     <i class="idea icon"></i>
-                    Blog Site
+                    Disrupter
                 </div>
                 <a href="/" class="item">Home</a>
                 <a href="/blogs/new" class="item">New Blog</a>
+                <div class="right menu">
+                    <% if(!currentUser) { %>
+                        <a href="/login" class="item">Login</a>
+                        <a href="/register" class="item">Sign Up</a>
+                    <% } else { %>
+                        <a href="#" class="item">Signed In As <%= currentUser.username %></a>
+                        <a href="/logout" class="item">Logout</a>
+                    <% } %>
+                </div>
             </div>
         </div>
+        
+
+        <div class="ui grid">
+            <% if(error && error.length > 0) { %>
+                <div id="message" class="ui container">
+                    <div class="ui center aligned error message segment">
+                        <%= error %>
+                    </div>
+                </div>
+            <% } %>
+            <% if(success && success.length > 0) { %>
+                <div id="message" class="ui container">
+                    <div class="ui center aligned success message segment">
+                        <%= success %>
+                    </div>
+                </div>
+            <% } %>
