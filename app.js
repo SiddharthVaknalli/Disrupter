@@ -29,7 +29,10 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 //Create the DB and connect mongoose to it
-mongoose.connect("mongodb://localhost/blog_app");
+var url = process.env.DATABASEURL || "mongodb://localhost/blog_app"; //To set a default value for the DB connection URL in case the DATABASEURL variable gets messed up
+mongoose.connect(url); 
+
+//mongoose.connect("mongodb://localhost/blog_app");
 
 //Import Mongoose models
 var Blog = require("./models/blog.js"),
