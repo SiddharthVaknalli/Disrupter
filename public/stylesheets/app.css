@@ -11,8 +11,15 @@ i.icon{
 }
 
 #message {
-    padding-top: 70px;
-    padding-bottom: -120px;
+    width: 400px !important;
+    position: fixed;
+    z-index: 999999;
+    top: 80px;
+    right: 0px;
+}
+
+#desc {
+    text-align: center;   
 }
 
 .footer {
@@ -24,7 +31,12 @@ i.icon{
     margin-bottom: 10px;
 }
 
-.text {
-    margin-top: -50px;
+#blogsIndex {
+    margin-top: 80px;
+    margin-bottom: 2.0em;
+}
+
+#blog {
+    margin-top: 50px;
     margin-bottom: 2.0em;
 }

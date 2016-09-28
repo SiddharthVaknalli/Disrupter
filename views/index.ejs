@@ -1,16 +1,24 @@
 <% include partials/header %>
-<div class="ui main text container">
+
+<div id="blogsIndex" class="ui main text container">
     <div class="ui huge header centered">DISRUPTER</div>
-    <p class="ui center aligned">Blog about disruptive tech ideas, or simply about stuff you love!</p>
+    <p id="desc">Blog about disruptive tech ideas, or simply about stuff you love!</p>
+    <% if(blogs.length > 0) { %>
     <div class="ui top attached segment">
         <div class="ui divided items">
             <%blogs.forEach(function(blog){ %>
                 <div class="item">
                     <div class="image">
-                        <img src="<%= blog.image %>" >
+                        <% if(blog.imageLink) { %>
+                            <img src="/<%= blog.imageLink %>" >
+                        <% } else { %>
+                            <img src="http://www.iconsfind.com/wp-content/uploads/2015/10/20151021_56272ba07d60f.png" >
+                        <% } %>
                     </div>
                     <div class="content">
-                        <a class="header" href="/blogs/<%= blog._id %>"><%= blog.title %></a>
+                        <% if(blog.title) { %>
+                            <a class="header" href="/blogs/<%= blog._id %>"><%= blog.title %></a>
+                        <% } %>
                         <br/>
                         By <a><%= blog.author.username %></a>
                         <div class="meta">
@@ -32,6 +40,7 @@
             <% }) %>
         </div>
     </div>
+    <% } %>
 </div>
 
 <% include partials/footer %>

@@ -3,7 +3,7 @@ var passportLocalMongoose = require("passport-local-mongoose");
 
 var BlogSchema = new mongoose.Schema({
    title: String,
-   image: String,
+   imageLink: String,
    body: String,
    created: { type: Date, default: Date.now }, //Sets it to the current date automatically
    author: {

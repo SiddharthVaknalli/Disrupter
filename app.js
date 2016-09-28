@@ -1,16 +1,18 @@
 var express = require("express"),
     app = express(),
+    fs = require("fs"),
     mongoose = require("mongoose"),
     bodyParser = require("body-parser"),
+    multer = require("multer"), //Multer automatically saves any files inside requests to Express routes to the uploads folder
+    upload  = multer({ dest: 'public/uploads/' }),
     expressSanitizer = require("express-sanitizer"),
     methodOverride = require("method-override"), 
-    passport = require("passport"), 
+    passport = require("passport"),
     LocalStrategy = require("passport-local"), 
     passportLocalMongoose = require("passport-local-mongoose"),
     flash = require("connect-flash");
 
 //To turn the request body into a JS object which can be manipulated - using body-parser package
-var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
 //If an _method query is seen in a route, use the HTTP verb it specifies instead of the one sent
@@ -31,7 +33,6 @@ app.use(express.static("public"));
 //Create the DB and connect mongoose to it
 var url = process.env.DATABASEURL || "mongodb://localhost/blog_app"; //To set a default value for the DB connection URL in case the DATABASEURL variable gets messed up
 mongoose.connect(url); 
-
 //mongoose.connect("mongodb://localhost/blog_app");
 
 //Import Mongoose models
@@ -88,7 +89,12 @@ app.get("/blogs/new", isLoggedIn, function(req, res){
 });
 
 //CREATE route
-app.post("/blogs", isLoggedIn, function(req, res){
+app.post("/blogs", isLoggedIn, upload.single('displayImage'), function(req, res){
+    //Multer inserts a req.file object for the file inputs in the request
+    if(req.file) {
+        req.body.blog.imageLink = req.file.path.substring(7); //The substring removed the 'public/' from the beginning of the string, so that the image is properly rendered in the template that requests it    
+    }
+    
     //Sanitize the body of the blog object by removing all script tags in it
     req.body.blog.body = req.sanitize(req.body.blog.body);
     
@@ -134,9 +140,13 @@ app.get("/blogs/:id/edit", checkBlogOwnership, function(req, res){
 });
 
 //UPDATE route
-app.put("/blogs/:id", checkBlogOwnership, function(req, res){
+app.put("/blogs/:id", checkBlogOwnership, upload.single('displayImage'), function(req, res){
     //Sanitize the body of the blog object by removing all script tags in it
     req.body.blog.body = req.sanitize(req.body.blog.body);
+    
+    if(req.file) {
+        req.body.blog.imageLink = req.file.path.substring(7);    
+    }
     
     Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog){
         if(err){
@@ -195,7 +205,7 @@ app.post("/login", passport.authenticate("local", {
     successRedirect: "/blogs",
     failureRedirect: "/login",
     failureFlash: "Invalid username or password",
-    successFlash: "Welcome to Disrupter!"
+    successFlash: "Welcome back to Disrupter!"
 }), function(req, res) {
 });
 
@@ -210,18 +220,18 @@ app.get("/logout", function(req, res) {
 //COMMENTS ROUTES
 //=================
 
-//Comments New
-//Pass in isLoggedIn() as middleware function
-app.get("/blogs/:id/comments/new", isLoggedIn, function(req, res){
-    Blog.findById(req.params.id, function(err, foundBlog){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("comments/new", { blog: foundBlog });      
-        }
-    });
-});
+// //Comments New
+// //Pass in isLoggedIn() as middleware function
+// app.get("/blogs/:id/comments/new", isLoggedIn, function(req, res){
+//     Blog.findById(req.params.id, function(err, foundBlog){
+//         if(err){
+//             console.log(err);
+//         }
+//         else{
+//             res.render("comments/new", { blog: foundBlog });      
+//         }
+//     });
+// });
 
 //Comments Create
 app.post("/blogs/:id/comments/", isLoggedIn, function(req, res){
@@ -257,32 +267,32 @@ app.post("/blogs/:id/comments/", isLoggedIn, function(req, res){
    }); 
 });
 
-//Comment edit route
-app.get("/blogs/:id/comments/:comment_id/edit", checkCommentOwnership, function(req, res){
-    Comment.findById(req.params.comment_id, function(err, foundComment) {
-        if(err){
-            console.log(err);
-            res.redirect("back");
-        }
-        else {
-            res.render("comments/edit", { comment: foundComment, blog_id: req.params.id });
-        }
-    })
-});
+// //Comment edit route
+// app.get("/blogs/:id/comments/:comment_id/edit", checkCommentOwnership, function(req, res){
+//     Comment.findById(req.params.comment_id, function(err, foundComment) {
+//         if(err){
+//             console.log(err);
+//             res.redirect("back");
+//         }
+//         else {
+//             res.render("comments/edit", { comment: foundComment, blog_id: req.params.id });
+//         }
+//     })
+// });
 
-//Comments update route
-app.put("/blogs/:id/comments/:comment_id", checkCommentOwnership, function(req, res){
-    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
-         if(err){
-             console.log(err);
-             res.redirect("back");
-         }
-         else{
-             req.flash("success", "Successfully edited comment!");
-             res.redirect("/blogs/" + req.params.id)
-         }
-    });
-});
+// //Comments update route
+// app.put("/blogs/:id/comments/:comment_id", checkCommentOwnership, function(req, res){
+//     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
+//          if(err){
+//              console.log(err);
+//              res.redirect("back");
+//          }
+//          else{
+//              req.flash("success", "Successfully edited comment!");
+//              res.redirect("/blogs/" + req.params.id)
+//          }
+//     });
+// });
 
 //Comment destroy route
 app.delete("/blogs/:id/comments/:comment_id", checkCommentOwnership, function(req, res){
