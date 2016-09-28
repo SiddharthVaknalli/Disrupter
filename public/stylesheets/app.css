@@ -11,7 +11,7 @@ i.icon{
 }
 
 #message {
-    width: 400px !important;
+    width: 25% !important;
     position: fixed;
     z-index: 999999;
     top: 80px;

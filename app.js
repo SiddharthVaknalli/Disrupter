@@ -109,6 +109,7 @@ app.post("/blogs", isLoggedIn, upload.single('displayImage'), function(req, res)
             res.render("new");
         }
         else{
+            req.flash("success", "Successfully created new blog!");
             res.redirect("/blogs");
         }
     })
@@ -153,6 +154,7 @@ app.put("/blogs/:id", checkBlogOwnership, upload.single('displayImage'), functio
             res.redirect("/blogs");
         }
         else{
+            req.flash("success", "Successfully updated blog!");
             res.redirect("/blogs/" + req.params.id);
         }
     })
@@ -165,6 +167,7 @@ app.delete("/blogs/:id", checkBlogOwnership, function(req, res){
           res.redirect("/blogs"); 
        }
        else{
+          req.flash("success", "Successfully deleted blog!")
           res.redirect("/blogs");   
        }
     });

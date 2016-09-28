@@ -1,6 +1,6 @@
 <% include partials/header %>
 
-<div class="ui main text container segment">
+<div id="blog" class="ui main text container segment">
     <div class="ui huge header">Edit <%= blog.title %></div>
     <form class="ui form" enctype="multipart/form-data" action="/blogs/<%= blog._id %>?_method=PUT" method="POST"><!--This overrides the POST method of the form, using the method-override package. A PUT request is actually sent-->
         <div class="field">
